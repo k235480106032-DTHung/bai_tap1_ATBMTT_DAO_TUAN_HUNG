@@ -12,12 +12,12 @@
 - **Tổng quan:** DES là thuật toán mã hóa đối xứng theo khối (Block Cipher), xử lý từng khối dữ liệu kích thước 64-bit sử dụng khóa có độ dài 56-bit (thực tế khóa nhận vào là 64-bit nhưng có 8-bit dùng để kiểm tra chẵn lẻ - parity bit).
 - **Mô hình cấu trúc:** Dựa trên cấu trúc mạng Feistel 16 vòng (round).
 - **Quy trình Mã hóa:**
-  1. **Hoán vị ban đầu (Initial Permutation - IP):** Khối dữ liệu 64-bit đầu vào được xáo trộn thứ tự các bit theo một bảng hoán vị cố định.
-  2. **16 vòng Feistel:** Dữ liệu 64-bit được chia thành 2 nửa: $L_0$ (Trái - 32 bit) và $R_0$ (Phải - 32 bit). Tại mỗi vòng $i$ (từ 1 đến 16):
+1. **Hoán vị ban đầu (Initial Permutation - IP):** Khối dữ liệu 64-bit đầu vào được xáo trộn thứ tự các bit theo một bảng hoán vị cố định.
+2. **16 vòng Feistel:** Dữ liệu 64-bit được chia thành 2 nửa: $L_0$ (Trái - 32 bit) và $R_0$ (Phải - 32 bit). Tại mỗi vòng $i$ (từ 1 đến 16):
      - $L_i = R_{i-1}$
      - $R_i = L_{i-1} \oplus f(R_{i-1}, K_i)$
      - Trong đó hàm $f$ thực hiện mở rộng 32-bit thành 48-bit, XOR với khóa con $K_i$ (48-bit), đi qua các hộp thay thế phi tuyến S-Box (biến 48-bit thành 32-bit) và hoán vị P-Box.
-  3. **Hoán vị nghịch đảo ($IP^{-1}$):** Kết hợp $R_{16}$ và $L_{16}$ rồi hoán vị ngược lại để tạo ra văn bản mã hóa (Ciphertext) 64-bit.
+3. **Hoán vị nghịch đảo ($IP^{-1}$):** Kết hợp $R_{16}$ và $L_{16}$ rồi hoán vị ngược lại để tạo ra văn bản mã hóa (Ciphertext) 64-bit.
 - **Quy trình Giải mã:** Sử dụng cùng một thuật toán và sơ đồ Feistel như mã hóa nhưng áp dụng các khóa con theo thứ tự ngược lại (từ $K_{16}$ giảm dần về $K_1$).
 
 ---
@@ -29,13 +29,13 @@
   - **AES-256:** Khóa 256-bit (14 vòng biến đổi).
 - **Mô hình cấu trúc:** Dựa trên Mạng hoán vị thế (Substitution-Permutation Network - SPN), biến đổi ma trận trạng thái (State matrix) kích thước $4 \times 4$ byte.
 - **Quy trình Mã hóa (Ví dụ với AES-128):**
-  1. **AddRoundKey ban đầu:** XOR ma trận trạng thái dữ liệu với khóa con đầu tiên.
-  2. **9 vòng lặp chuẩn (Vòng 1 đến vòng 9):**
+1. **AddRoundKey ban đầu:** XOR ma trận trạng thái dữ liệu với khóa con đầu tiên.
+2. **9 vòng lặp chuẩn (Vòng 1 đến vòng 9):**
      - **SubBytes:** Thay thế từng byte phi tuyến bằng bảng S-Box.
      - **ShiftRows:** Dịch chuyển vòng các hàng trong ma trận trạng thái (Hàng 0 giữ nguyên, Hàng 1 dịch 1 byte, Hàng 2 dịch 2 bytes, Hàng 3 dịch 3 bytes).
      - **MixColumns:** Trộn các cột bằng phép nhân ma trận trên trường Galois $GF(2^8)$.
      - **AddRoundKey:** XOR kết quả với khóa con của vòng hiện tại.
-  3. **Vòng cuối cùng (Vòng 10):** Bỏ qua bước *MixColumns*, chỉ thực hiện: `SubBytes` -> `ShiftRows` -> `AddRoundKey`.
+3. **Vòng cuối cùng (Vòng 10):** Bỏ qua bước *MixColumns*, chỉ thực hiện: `SubBytes` -> `ShiftRows` -> `AddRoundKey`.
 - **Quy trình Giải mã:** Thực hiện các bước nghịch đảo theo thứ tự ngược lại: `InvAddRoundKey` -> `InvShiftRows` -> `InvSubBytes` -> `InvMixColumns` sử dụng các khóa con theo thứ tự từ vòng 10 về vòng 0.
 
 ---
@@ -79,26 +79,26 @@ Quá trình tạo cặp khóa RSA diễn ra theo 6 bước toán học:
 #### a. Mô hình Xác thực người nhận (Đảm bảo tính Bí mật - Confidentiality)
 - **Mục đích:** Chỉ duy nhất người nhận hợp lệ mới đọc được nội dung thông điệp.
 - **Quy trình:**
-  1. **Người gửi (Alice):** Sử dụng **Public Key của người nhận (Bob)** $(e_{Bob}, n_{Bob})$ để mã hóa thông điệp $M$:
+1. **Người gửi (Alice):** Sử dụng **Public Key của người nhận (Bob)** $(e_{Bob}, n_{Bob})$ để mã hóa thông điệp $M$:
      $$C = M^e \pmod n$$
-  2. **Người nhận (Bob):** Sử dụng **Private Key của chính mình** $(d_{Bob}, n_{Bob})$ để giải mã lấy lại thông điệp gốc $M$:
+2. **Người nhận (Bob):** Sử dụng **Private Key của chính mình** $(d_{Bob}, n_{Bob})$ để giải mã lấy lại thông điệp gốc $M$:
      $$M = C^d \pmod n$$
 
 #### b. Mô hình Xác thực người gửi (Chữ ký số - Authentication / Non-repudiation)
 - **Mục đích:** Xác minh chính xác ai là người gửi và đảm bảo dữ liệu không bị sửa đổi.
 - **Quy trình:**
-  1. **Người gửi (Alice):** Băm thông điệp thành $H = Hash(M)$, sau đó dùng **Private Key của chính mình** $(d_{Alice}, n_{Alice})$ để mã hóa $H$ tạo ra Chữ ký số $S$:
+1. **Người gửi (Alice):** Băm thông điệp thành $H = Hash(M)$, sau đó dùng **Private Key của chính mình** $(d_{Alice}, n_{Alice})$ để mã hóa $H$ tạo ra Chữ ký số $S$:
      $$S = H^d \pmod n$$
-  2. **Người nhận (Bob):** Dùng **Public Key của Alice** $(e_{Alice}, n_{Alice})$ để giải mã chữ ký $S$ thu được $H'$. Sau đó tự băm lại $M$ thu được $H''$.
-  3. **Kiểm tra:** Nếu $H' == H''$, Bob xác nhận thông điệp đúng do Alice gửi và chưa bị can thiệp.
+2. **Người nhận (Bob):** Dùng **Public Key của Alice** $(e_{Alice}, n_{Alice})$ để giải mã chữ ký $S$ thu được $H'$. Sau đó tự băm lại $M$ thu được $H''$.
+3. **Kiểm tra:** Nếu $H' == H''$, Bob xác nhận thông điệp đúng do Alice gửi và chưa bị can thiệp.
 
 #### c. Mô hình Kết hợp cả Xác thực người gửi và người nhận
 - **Mục đích:** Vừa giữ bí mật thông điệp, vừa xác thực danh tính người gửi.
 - **Quy trình:**
-  1. **Alice ký:** Dùng *Private Key của Alice* ký lên thông điệp.
-  2. **Alice mã hóa:** Dùng *Public Key của Bob* mã hóa toàn bộ văn bản đã ký.
-  3. **Bob giải mã:** Dùng *Private Key của Bob* giải mã thông điệp.
-  4. **Bob xác minh:** Dùng *Public Key của Alice* để kiểm tra chữ ký.
+1. **Alice ký:** Dùng *Private Key của Alice* ký lên thông điệp.
+2. **Alice mã hóa:** Dùng *Public Key của Bob* mã hóa toàn bộ văn bản đã ký.
+3. **Bob giải mã:** Dùng *Private Key của Bob* giải mã thông điệp.
+4. **Bob xác minh:** Dùng *Public Key của Alice* để kiểm tra chữ ký.
 
 ---
 
